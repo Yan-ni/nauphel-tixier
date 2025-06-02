@@ -1,7 +1,16 @@
 from crawl4ai import LLMConfig, LLMExtractionStrategy
 import models
+from dotenv import load_dotenv
+import os
 
-MISTRAL_API_KEY = ""
+load_dotenv()
+
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+
+if MISTRAL_API_KEY is None:
+    print("Error: You need to include mistral API Key in the .env file in order to run the script.")
+    exit(1)
+
 
 llm_strategy = LLMExtractionStrategy(
     llm_config=LLMConfig(
