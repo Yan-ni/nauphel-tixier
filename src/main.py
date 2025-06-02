@@ -26,14 +26,19 @@ async def main():
             )
 
             # transformer le résultat en objet JSON
-            result = json.loads(result.extracted_content)[0]
+            extracted_content: list = json.loads(result.extracted_content)
+            
+            if len(extracted_content) == 0:
+                continue
+            
+            first_result = extracted_content[0]
 
-            if result.get('error'):
+            if first_result.get('error'):
                 print('skipped for error.')
                 continue
 
             results.append({
-                "data": result,
+                "data": first_result,
                 "place": place
             })
 
