@@ -4,6 +4,7 @@ from tqdm import tqdm
 from googlesearch import search as google_search
 from datetime import datetime
 from pydantic import HttpUrl, ValidationError
+import os
 
 def get_google_search_result(places_list: list[str]) -> list[tuple[str, HttpUrl]]:
     search_result_links: list[tuple[str, HttpUrl]] = []
@@ -43,6 +44,8 @@ def save_to_excel(results: list[dict], output_file=f"output_{datetime.now().strf
     horaires_df = pd.DataFrame(horaires_data, columns=["place", "jour", "horaires_ouverture", "horaires_fermeture"])
     jours_fermeture_df = pd.DataFrame(jours_fermeture_data, columns=["place", "jour_fermeture"])
     dates_feries_df = pd.DataFrame(dates_feries_data, columns=["place", "dates_feries"])
+
+    os.makedirs("output", exist_ok=True)
 
     with pd.ExcelWriter(f"output/{output_file}", engine="openpyxl") as writer:
         tarifs_df.to_excel(writer, sheet_name="Tarifs", index=False)
