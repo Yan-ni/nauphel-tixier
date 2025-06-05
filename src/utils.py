@@ -22,7 +22,7 @@ def get_google_search_result(places_list: list[str]) -> list[tuple[str, HttpUrl]
     
     return search_result_links
 
-def save_to_excel(results: list[dict], output_file=f"output_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.xlsx"):
+def save_to_excel(results: list[dict], output_file=f"output_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx"):
     tarifs_data: list[dict] = []
     horaires_data: list[dict] = []
     jours_fermeture_data: list[dict] = []
