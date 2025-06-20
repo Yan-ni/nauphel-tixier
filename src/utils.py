@@ -8,18 +8,29 @@ import os
 
 def get_google_search_result(places_list: list[str]) -> list[tuple[str, HttpUrl]]:
     search_result_links: list[tuple[str, HttpUrl]] = []
-    
+    skip_domains = [
+        "google.", "wikipedia.", "tripadvisor.", "yelp.", "facebook.", "instagram."
+    ]
+    skip_extensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"]
+    prefer_domains = [".fr", ".com", ".org", ".net"]
+
     for place in tqdm(places_list):
-        while res := next(google_search(f"{place} paris horaires tarifs", lang="fr")):
+        for res in google_search(f"{place} paris horaires tarifs", lang="fr"):
+            if not res.startswith("http"):
+                continue
+            if any(domain in res for domain in skip_domains):
+                continue
+            if any(res.lower().endswith(ext) for ext in skip_extensions):
+                continue
+            if not any(domain in res for domain in prefer_domains):
+                continue
             try:
                 resUrl = HttpUrl(res)
+                search_result_links.append((place, resUrl))
+                break
             except ValidationError:
                 print('the following url is not valid : ', res)
                 continue
-            break
-
-        search_result_links.append((place, resUrl))
-    
     return search_result_links
 
 def save_to_excel(results: list[dict], output_file=f"output_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.xlsx"):
